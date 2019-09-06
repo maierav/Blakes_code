@@ -281,12 +281,6 @@ for c = 1:24
     
     if c == 1
         title({'\fontsize{16}',BRdatafile,'LFP'})
-        %ylabel('1','Rotation',0);
-        %ylh = get(gca,'ylabel');                                                    
-        %ylp = get(ylh, 'Position');
-        %ext=get(ylh,'Extent');
-        %set(ylh, 'rotation',0, 'position',ylp+[ext(2) 0 0])
-        %set(ylh,'rotation',0,'VerticalAlignment','middle','HorizontalAlignment','right')
     end
    
     if c == 12
@@ -296,7 +290,6 @@ end
 
 set(ha(1:23), 'XTickLabel',''); %remove labels from first 23 plots
 set(ha(1:24), 'box', 'off');
-%set(ha(1:24), 'YTickLabel','');
 
 xlabel('\fontsize{15}time (ms)');
 
@@ -306,50 +299,45 @@ mean_basetp = mean(basetp, 1); %calculates the mean of the reference range
 bcd = STIM.aMUA(1:351,:,:)- mean_basetp; %performs calculation, labeled bcd
 mean_naMUA = mean(bcd, 3); %averages the contact samples by trial (the third dimension of the structure)
 refwin = (pre:post); %reference window
-mean_aMUA = mean(STIM.aMUA, 3);
-refwin = (-50:300);
-h = figure('Position', [0,0,240,291*2]);
-[ha, pos] = tight_subplot(24,1,[0.003 .05],[.1 .15],[.1 .1]); %channels, columns, [spacing], [left, right margins], [top and bottom margin]
- 
-for iii = 1:24
+
+h = figure('Position', [0,0,240,291*2]); %the dimensions of the figure
+[ha, pos] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
+for c1 = 1:24
     
-    axes(ha(iii)); %put the axes on each line; ha is a variable that gets the axis of each subplot, for each (i)1-24, get axis
+    axes(ha(c1)); % ha is a variable that gets the axis of each subplot, for each (c1)1-24, get axis
     
-    area(refwin,mean_aMUA(:,iii)) %specify x range (refwin, mean_LFP(1 thru 351 samples, channel i)
-    areafill = area(refwin,mean_aMUA(:,iii));
+    area(refwin,mean_naMUA(:,c1)); 
+    areafill = area(refwin,mean_naMUA(:,c1));
     areafill.FaceColor = [0.75 0.75 0.75];
-    xlim([-50 300]);    %set the limitation of the x axis (sometimes the plot will plot more than you need, creating a gap)
-    ylim([2.5 5]);
+    xlim([-50 300]); %set the limitation of the x axis (sometimes the plot will plot more than you need, creating a gap)
+    ylim([-1 1]);
     set(h,'position',get(h,'position').*[1 1 1 1]); %reduce the size of the individual plots
-    line(xlim(), [0,0], 'LineWidth', 0.5, 'Color', 'k'); %create black horizontal line on the origin for each plot
+    line(xlim(), [0,0],'LineStyle','-.','LineWidth', 0.1, 'Color', 'k'); %create black horizontal line on the origin for each plot
     xline(0,'-.b');
+    %yticks(c1);
+    ylabel(c1);
     grid on
-    if iii < 24
-    set(gca, 'XTick', []) %removing the units on the x axis (if i < 24) 
-    set(gca, 'YTick', []) %removing the units on the x axis (if i < 24)
+    
+    if c1 < 24
+    set(gca, 'XTick', '') %removing the units on the x axis (if i < 24) 
+    set(gca, 'YTick', '') %removing the units on the y axis (if i < 24)
     f = gca; f.XAxis.Visible = 'off'; %remove the x axis
     end
     
-    if iii == 1
-        title({'\fontsize{18}aMUA',BRdatafile})
+    if c1 == 1
+        title({'\fontsize{16}',BRdatafile,'LFP'})
     end
-    if iii == 12
-        ylabel('\fontsize{15}probes in order of depth');
-    end
-     if iii == 24
-        ylabel('24','Rotation',0);
-        ylh = get(gca,'ylabel');                                                    
-        ylp = get(ylh, 'Position');
-        ext=get(ylh,'Extent');
-        set(ylh, 'rotation',0, 'position',ylp+[ext(2) 0 0])
-        set(ylh,'rotation',0,'VerticalAlignment','middle')
+   
+    if c1 == 12
+        ylabel({'\fontsize{13}Contacts in order of depth','\fontsize{9}12'})
     end
 end
 
 set(ha(1:23), 'XTickLabel',''); %remove labels from first 23 plots
-set(ha(1:24), 'box', 'off'); 
-set(ha(1:24), 'YTickLabel', '');
-xlh = xlabel('\fontsize{15}time (ms)');
+set(ha(1:24), 'YTickLabel','');
+set(ha(1:24), 'box', 'off');
+
+xlabel('\fontsize{15}time (ms)');
 %% Really useful Matlab central functions for plotting data to make everything easier and look better: 
 
 
