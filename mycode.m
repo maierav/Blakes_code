@@ -2,11 +2,20 @@
 clear 
 
 %% establish directories for toolkits and data
-npmkdir    = '/users/bmitc/Documents/MATLAB/NPMK/'; 
-nbanadir   = '/users/bmitc/Documents/MATLAB/nbanalysis/'; 
 
-directory  = '/users/bmitc/Documents/MATLAB/data/';
-BRdatafile = '161006_E_rfori001';       %sample data 
+if strcmp(getenv('USER'),'maierav')
+    npmkdir    = '/Users/alex 1/Desktop/LAB/Brock/OLD/NPMK-4.5.3.0/NPMK/'; 
+    nbanadir   = '/Users/alex 1/Desktop/LAB/bootcamp/nbanalysis/'; 
+ 
+    directory  = '/Users/alex 1/Desktop/LAB/';
+else
+    npmkdir    = '/users/bmitc/Documents/MATLAB/NPMK/'; 
+    nbanadir   = '/users/bmitc/Documents/MATLAB/nbanalysis/'; 
+ 
+    directory  = '/users/bmitc/Documents/MATLAB/data/';
+end
+
+BRdatafile = '161006_E_rfori001';
 filename   = [directory BRdatafile]; 
 
 addpath(genpath(directory))
@@ -18,7 +27,7 @@ addpath(genpath(nbanadir))
 patterns   = {'rforidrft','rfsfdrft','posdisparitydrft','disparitydrft','cinterocdrft','coneinterocdrft','conedrft', ...
                 'colorflicker','bwflicker','rfori','rfsize','cinteroc','color','rfsf','mcosinteroc','dotmapping'}; 
 
-for p = 1:length(patterns)
+for p = 1:length(patterns) %creating a loop to detect which filetype I am trying to load in
 
    pattern      = patterns{p}; 
   
@@ -32,13 +41,13 @@ for p = 1:length(patterns)
    
 end
 
-if isequal(match,'dotmapping')
+if isequal(match,'dotmapping') %pairing the matched pattern with its extension
 ext  = '.gDotsXY_di';
 else
 ext  = ['.g' upper(match) 'Grating_di']; 
 end
 
-if contains(ext,'DRFT')
+if contains(ext,'DRFT') %defining which grating read function to use based on the extension
       grating     = readgDRFTGrating([filename ext]); % from nbanalysis 
 elseif contains(ext,'Dots')
       grating     = readgDotsXY([filename ext]);
@@ -49,16 +58,18 @@ end
 %% Load Event Times/Codes
 
 NEV             = openNEV([filename '.nev'],'noread','overwrite');
-EventCodes      = NEV.Data.SerialDigitalIO.UnparsedData - 128;        % we don't know why we have to subtract 128 but we do
-EventSamples    = NEV.Data.SerialDigitalIO.TimeStamp;                 % in samples 
-EventTimes      = floor(NEV.Data.SerialDigitalIO.TimeStampSec.*1000); % convert to ms 
+EventCodes      = NEV.Data.SerialDigitalIO.UnparsedData - 128;        % subtract 128 for non-obvious reasons
+EventSamples    = NEV.Data.SerialDigitalIO.TimeStamp;                 % Events in samples
+EventTimes      = floor(NEV.Data.SerialDigitalIO.TimeStampSec.*1000); % Convert event to ms 
 [pEvC, pEvT]    = parsEventCodesML(EventCodes,EventSamples);          % sorts codes, samps or times into trials
 
-% So far all of these data are from EVERY trial, including trials where
-% animal breaks fixation. Lets get rid of those and make a new structure
+% Note: these data are from EVERY trial, including trials where
+% animal breaks fixation. The next step is to get rid of the fixation breaks and make a new structure
 % with the grating info and the stimulus onsets 
 
-STIM            = sortStimandTimeData(grating,pEvC,pEvT,'stim'); % this is in nbanalysis. definitely double check it before you use it. 
+STIM            = sortStimandTimeData(grating,pEvC,pEvT,'stim'); 
+
+%this is now a structure that includes only samples with fixation and stimulus presentation
 
 %% STEP THREE: LOAD NEURAL DATA
 
@@ -276,7 +287,7 @@ for c = 1:24
     if c < 24
     set(gca, 'XTick', '') %removing the units on the x axis (if i < 24) 
     %set(gca, 'YTick', '') %removing the units on the x axis (if i < 24)
-    f = gca; f.XAxis.Visible = 'off'; %remove the x axis
+    p = gca; p.XAxis.Visible = 'off'; %remove the x axis
     end
     
     if c == 1
@@ -321,7 +332,7 @@ for c1 = 1:24
     if c1 < 24
     set(gca, 'XTick', '') %removing the units on the x axis (if i < 24) 
     set(gca, 'YTick', '') %removing the units on the y axis (if i < 24)
-    f = gca; f.XAxis.Visible = 'off'; %remove the x axis
+    p = gca; p.XAxis.Visible = 'off'; %remove the x axis
     end
     
     if c1 == 1
