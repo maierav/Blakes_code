@@ -47,7 +47,7 @@ else
 ext  = ['.g' upper(match) 'Grating_di']; 
 end
 
-if contains(ext,'DRFT') %defining which grating read function to use based on the extension
+if contains(ext,'DRFT') %this is checking what sort of file it is, and what needs to be used to read it
       grating     = readgDRFTGrating([filename ext]); % from nbanalysis 
 elseif contains(ext,'Dots')
       grating     = readgDotsXY([filename ext]);
@@ -224,6 +224,7 @@ STIM.LFP  = trigData(LFP,floor(STIM.onsets./30),-pre,post); % this function is M
 STIM.CSD  = trigData(CSD,floor(STIM.onsets./30),-pre,post); 
 STIM.aMUA = trigData(MUA,floor(STIM.onsets./30),-pre,post); 
 
+
 %% LOAD discrete MUA with ppnev file
 % to get the ppNEV files [post-processed NEV] use the offlineBRAutoSort
 % directory under https://github.com/maierav/KiloSortUtils
@@ -264,9 +265,10 @@ bcd = STIM.LFP(1:351,:,:)- mean_basetp; %performs calculation, labeled bcd
 mean_nLFP = mean(bcd, 3); %averages the contact samples by trial (the third dimension of the structure)
 refwin = (pre:post); %reference window
 
-h = figure('Position', [0,0,280,291*2]); %the dimensions of the figure
-[ha, ~] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
-for c = 1:24
+figure('Position', [0,0,280,291*2]);
+subplot(1,4,1)
+[ha, pos] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
+for c = 1:25
     
     axes(ha(c)); % ha is a variable that gets the axis of each subplot, for each (i)1-24, get axis
     
@@ -275,7 +277,7 @@ for c = 1:24
     areafill.FaceColor = [0.75 0.75 0.75];
     xlim([-50 300]); %set the limitation of the x axis (sometimes the plot will plot more than you need, creating a gap)
     ylim([-320 100]);
-    set(h,'position',get(h,'position').*[1 1 1 1]); %reduce the size of the individual plots
+    %set(h,'position',get(h,'position').*[1 1 1 1]); %reduce the size of the individual plots
     line(xlim(), [0,0],'LineStyle','-.','LineWidth', 0.1, 'Color', 'k'); %create black horizontal line on the origin for each plot
     xline(0,'-.b');
     yticks(c);
@@ -310,7 +312,7 @@ bcd = STIM.aMUA(1:351,:,:)- mean_basetp; %performs calculation, labeled bcd
 mean_naMUA = mean(bcd, 3); %averages the contact samples by trial (the third dimension of the structure)
 refwin = (pre:post); %reference window
 
-h = figure('Position', [0,0,280,291*2]); %the dimensions of the figure
+subplot(1,4,2); %h = figure('Position', [0,0,280,291*2]); %the dimensions of the figure
 [ha, pos] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
 for c1 = 1:24
     
@@ -367,7 +369,7 @@ for c3 = 1:24
     %if get(ha,
     areafill.FaceColor = [0.75 0.75 0.75];
     xlim([-50 300]); %set the limitation of the x axis (sometimes the plot will plot more than you need, creating a gap)
-    ylim('auto');
+    ylim([-1000 1000]);
     set(h,'position',get(h,'position').*[1 1 1 1]); %reduce the size of the individual plots
     line(xlim(), [0,0],'LineStyle','-.','LineWidth', 0.1, 'Color', 'k'); %create black horizontal line on the origin for each plot
     xline(0,'-.b');
@@ -425,12 +427,13 @@ set(clrbar.Label,'rotation',270,'fontsize',12,'VerticalAlignment','middle');
 ylabel('\fontsize{12}Contacts indexed down from the surface');
 
 %% Analysis
+[ha, pos] = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
+for ii = 1:6; axes(ha(ii)); plot(randn(10,ii)); end
+set(ha(1:4),'XTickLabel',''); set(ha,'YTickLabel','')
 
-
-
-
-
-
-
-
-
+%% 
+for k = 1:21
+    smplot(7,3,k)
+    imagesc(peaks(300))
+    axis on
+end
