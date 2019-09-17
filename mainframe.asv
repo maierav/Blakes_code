@@ -225,11 +225,11 @@ CSD = padarray(CSD,[0 1],NaN,'replicate'); % pad array if you want to keep the m
 pre   = -50;
 post  = 300; 
 
-STIM.LFP_ori1  = trigData(LFP,STIM.ori1onsets,-pre,post); %pre variable is in absolute units 
+STIM.LFP_ori1  = trigData(LFP,STIM.ori1onsets,-pre,post); % this function is MLAnalysisOnline or nbanalysis. pre variable is in absolute units 
 STIM.CSD_ori1  = trigData(CSD,STIM.ori1onsets,-pre,post); 
 STIM.aMUA_ori1 = trigData(MUA,STIM.ori1onsets,-pre,post);
 
-STIM.LFP_ori2  = trigData(LFP,STIM.ori2onsets,-pre,post); 
+STIM.LFP_ori2  = trigData(LFP,STIM.ori2onsets,-pre,post); % this function is MLAnalysisOnline or nbanalysis. pre variable is in absolute units 
 STIM.CSD_ori2  = trigData(CSD,STIM.ori2onsets,-pre,post); 
 STIM.aMUA_ori2 = trigData(MUA,STIM.ori2onsets,-pre,post); 
 
@@ -312,40 +312,26 @@ hold off
 
 [bAVG_CSD_ori2] = basecorrect(AVG.CSD_ori2);
 
-f_bAVG_CSD_ori1 = filterCSD(bAVG_CSD_ori1')';
-f_bAVG_CSD_ori2 = filterCSD(bAVG_CSD_ori2')';
+f_bAVG_CSD_ori1 = filterCSD(bAVG_aMUA_ori1')';
+f_bAVG_CSD_ori2 = filterCSD(bAVG_aMUA_ori2')';
 
 figure;
 subplot(1,2,1)
-imagesc(refwin,1:24,f_bAVG_CSD_ori1');
+imagesc(refwin,1:24,f_bAVG_CSD_ori1);
 hold on
-colormap(flipud(colormap('jet'))); % this makes the red color the sinks and the blue color the sources (convention)
-colorbar; v = vline(0); set(v,'color','k','linestyle','-.','linewidth',1);
-set(gca,'tickdir','out');  
-climit = max(abs(get(gca,'CLim'))*1);
-set(gca,'CLim',[-climit climit],'Box','off','TickDir','out')
-%plot([0 0], ylim,'k')
-%plot([-800 800], ylim,'k')
-title({'Interpolated CSD - 157.5 tilt',BRdatafile}, 'Interpreter', 'none')
-xlabel('\fontsize{12}Time (ms)')
-clrbar = colorbar; clrbar.Label.String = 'nA/mm^3'; 
-set(clrbar.Label,'rotation',270,'fontsize',12,'VerticalAlignment','middle');
-ylabel('\fontsize{12}Contacts indexed down from the surface');
+plot([0 0], ylim,'k')
+plot([800 800], ylim,'k')
+title({'CSD - 157.5 tilt',BRdatafile}, 'Interpreter', 'none')
+xlabel('time (ms)')
+ylabel('Contacts indexed down from surface')
 hold off
 
 subplot(1,2,2)
-imagesc(refwin,1:24,f_bAVG_CSD_ori2');
+imagesc(refwin,1:24,f_bAVG_CSD_ori2);
 hold on
-colormap(flipud(colormap('jet'))); % this makes the red color the sinks and the blue color the sources (convention)
-colorbar; v = vline(0); set(v,'color','k','linestyle','-.','linewidth',1);
-set(gca,'tickdir','out');  
-climit = max(abs(get(gca,'CLim'))*1);
-set(gca,'CLim',[-climit climit],'Box','off','TickDir','out')
-hold on;
-%plot([0 0], ylim,'k')
-%plot([-800 800], ylim,'k')
-title({'Interpolated CSD - 0 tilt',BRdatafile}, 'Interpreter', 'none')
-xlabel('\fontsize{12}Time (ms)')
-clrbar = colorbar; clrbar.Label.String = 'nA/mm^3'; 
-set(clrbar.Label,'rotation',270,'fontsize',12,'VerticalAlignment','middle');
-ylabel('\fontsize{12}Contacts indexed down from the surface');
+plot([0 0], ylim,'k')
+plot([800 800], ylim,'k')
+title({'aMUA - 0 tilt',BRdatafile}, 'Interpreter', 'none')
+xlabel('time (ms)')
+ylabel('Contacts indexed down from surface')
+hold off

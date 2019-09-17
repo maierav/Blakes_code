@@ -266,9 +266,8 @@ mean_nLFP = mean(bcd, 3); %averages the contact samples by trial (the third dime
 refwin = (pre:post); %reference window
 
 figure('Position', [0,0,280,291*2]);
-subplot(1,4,1)
 [ha, pos] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
-for c = 1:25
+for c = 1:24
     
     axes(ha(c)); % ha is a variable that gets the axis of each subplot, for each (i)1-24, get axis
     
@@ -312,7 +311,7 @@ bcd = STIM.aMUA(1:351,:,:)- mean_basetp; %performs calculation, labeled bcd
 mean_naMUA = mean(bcd, 3); %averages the contact samples by trial (the third dimension of the structure)
 refwin = (pre:post); %reference window
 
-subplot(1,4,2); %h = figure('Position', [0,0,280,291*2]); %the dimensions of the figure
+h = figure('Position', [0,0,280,291*2]); %the dimensions of the figure
 [ha, pos] = tight_subplot(24,1,[0.005 .03],[.1 .15],[.2 .2]); %channels, columns, [spacing], [top and bottom margin], [left and right margin]
 for c1 = 1:24
     
@@ -388,7 +387,7 @@ for c3 = 1:24
     end
    
     if c3 == 12
-        ylabel({'Contacts in order of depth','\fontsize{9}12'})
+        ylabel({'\fontsize{12}Contacts in order of depth','\fontsize{9}12'})
     end
 end
 
@@ -420,20 +419,11 @@ set(gca,'CLim',[-climit climit],'Box','off','TickDir','out')
 hold on;
 %plot([0 0], ylim,'k')
 %plot([-800 800], ylim,'k')
-title({'CSD',BRdatafile}, 'Interpreter', 'none')
+title({'Interpolated CSD',BRdatafile}, 'Interpreter', 'none')
 xlabel('\fontsize{12}Time (ms)')
 clrbar = colorbar; clrbar.Label.String = 'nA/mm^3'; 
 set(clrbar.Label,'rotation',270,'fontsize',12,'VerticalAlignment','middle');
 ylabel('\fontsize{12}Contacts indexed down from the surface');
 
 %% Analysis
-[ha, pos] = tight_subplot(3,2,[.01 .03],[.1 .01],[.01 .01])
-for ii = 1:6; axes(ha(ii)); plot(randn(10,ii)); end
-set(ha(1:4),'XTickLabel',''); set(ha,'YTickLabel','')
 
-%% 
-for k = 1:21
-    smplot(7,3,k)
-    imagesc(peaks(300))
-    axis on
-end
