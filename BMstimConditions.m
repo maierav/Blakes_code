@@ -252,9 +252,9 @@ end
 %% Plot! 
 % LFP comparison; Ori 1 vs Ori 2
 
-[bAVG_LFP_ori1] = basecorrect(AVG.LFP_ori1);
+[bAVG_LFP_ori1] = BMbasecorrect(AVG.LFP_ori1);
 
-[bAVG_LFP_ori2] = basecorrect(AVG.LFP_ori2);
+[bAVG_LFP_ori2] = BMBMbasecorrect(AVG.LFP_ori2);
 
 refwin = pre:post;
 
@@ -281,9 +281,9 @@ hold off
 
 %% MUA comparison
 
-[bAVG_aMUA_ori1] = basecorrect(AVG.aMUA_ori1);
+[bAVG_aMUA_ori1] = BMbasecorrect(AVG.aMUA_ori1);
 
-[bAVG_aMUA_ori2] = basecorrect(AVG.aMUA_ori2);
+[bAVG_aMUA_ori2] = BMbasecorrect(AVG.aMUA_ori2);
 
 figure;
 subplot(1,2,1)
@@ -308,9 +308,9 @@ hold off
 
 %% CSD comparison
 
-[bAVG_CSD_ori1] = basecorrect(AVG.CSD_ori1);
+[bAVG_CSD_ori1] = BMbasecorrect(AVG.CSD_ori1);
 
-[bAVG_CSD_ori2] = basecorrect(AVG.CSD_ori2);
+[bAVG_CSD_ori2] = BMbasecorrect(AVG.CSD_ori2);
 
 f_bAVG_CSD_ori1 = filterCSD(bAVG_CSD_ori1')';
 f_bAVG_CSD_ori2 = filterCSD(bAVG_CSD_ori2')';
